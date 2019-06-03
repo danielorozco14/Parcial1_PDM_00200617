@@ -4,17 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.danielorozco14.basketballscoreboard.R
+import com.danielorozco14.basketballscoreboard.adapters.PartidoRVAdapter
+import com.danielorozco14.basketballscoreboard.data.entities.Partido
+import com.danielorozco14.basketballscoreboard.ui.viewmodel.PartidoViewModel
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class PlaceholderFragment : Fragment() {
+class HistorialActivityFragment : Fragment() {
 
+    lateinit var adapter: PartidoRVAdapter
+    lateinit var rv_lista_partidos:RecyclerView
     private lateinit var pageViewModel: PageViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,17 +30,27 @@ class PlaceholderFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_main, container, false)
-        /**val textView: TextView = root.findViewById(R.id.section_label)
-        pageViewModel.text.observe(this, Observer<String> {
-            textView.text = it
-        })**/
+
+        rv_lista_partidos=root.findViewById(R.id.rv_partidos)
+        if (context!=null){
+            adapter= PartidoRVAdapter(context!!)
+        }
+        rv_lista_partidos.adapter=adapter
+        rv_lista_partidos.layoutManager=LinearLayoutManager(context)
+
+        var partidoViewModel:PartidoViewModel=ViewModelProviders.of(this).get(PartidoViewModel::class.java)
+
+        partidoViewModel.allPartidos.observe(this, Observer {
+            it?.let {
+                adapter.updateList(it)
+            }
+        })
+
         return root
     }
+
 
     companion object {
         /**
@@ -48,8 +64,8 @@ class PlaceholderFragment : Fragment() {
          * number.
          */
         @JvmStatic
-        fun newInstance(sectionNumber: Int): PlaceholderFragment {
-            return PlaceholderFragment().apply {
+        fun newInstance(sectionNumber: Int): HistorialActivityFragment {
+            return HistorialActivityFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_SECTION_NUMBER, sectionNumber)
                 }
