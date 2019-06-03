@@ -3,6 +3,7 @@ package com.danielorozco14.basketballscoreboard
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -20,6 +21,8 @@ import com.danielorozco14.basketballscoreboard.ui.main.ScoreBoardActivityFragmen
 import com.danielorozco14.basketballscoreboard.ui.main.SectionsPagerAdapter
 import com.danielorozco14.basketballscoreboard.ui.viewmodel.PartidoViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
+
 
 
        /** val fab: FloatingActionButton = findViewById(R.id.fab)

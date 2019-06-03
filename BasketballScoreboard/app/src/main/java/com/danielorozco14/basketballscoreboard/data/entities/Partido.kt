@@ -14,7 +14,11 @@ class Partido (
     @ColumnInfo(name = "equipo_visitante")
     var equipo_visitante:String,
     @ColumnInfo(name = "marcador_visitante")
-    var marcador_visitante:Int
+    var marcador_visitante:Int,
+    @ColumnInfo(name="fecha")
+    var fecha:String,
+    @ColumnInfo(name="hora")
+    var hora:String
 
 ){
     @PrimaryKey(autoGenerate = true)

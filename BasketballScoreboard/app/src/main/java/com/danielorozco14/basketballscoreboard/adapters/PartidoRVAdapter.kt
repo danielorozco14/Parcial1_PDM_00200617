@@ -39,6 +39,8 @@ class PartidoRVAdapter internal constructor(context: Context):RecyclerView.Adapt
             this.equipo_visitante_view.text=partido.equipo_visitante
             this.marcador_local_view.text=partido.marcador_local.toString()
             this.marcador_visitante_view.text=partido.marcador_visitante.toString()
+            this.fecha_view.text=partido.fecha
+            this.hora_view.text=partido.hora
         }
     }
 }

@@ -83,9 +83,9 @@
             android:text="Visita"
             android:textAlignment="center"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="256dp"
+            android:layout_marginLeft="236dp"
             android:textSize="24dp"
-            android:layout_marginStart="256dp"
+            android:layout_marginStart="236dp"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="44dp"
             android:id="@+id/textView2"/>
@@ -121,9 +121,9 @@
 
             android:textAlignment="center"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="304dp"
+            android:layout_marginLeft="292dp"
             android:textSize="44dp"
-            android:layout_marginStart="304dp"
+            android:layout_marginStart="292dp"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="116dp"
             android:id="@+id/score_visitante"/>

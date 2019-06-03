@@ -1,6 +1,7 @@
 package com.danielorozco14.basketballscoreboard.data.room
 
 import android.content.Context
+import android.util.Log
 import androidx.room.CoroutinesRoom
 import androidx.room.Database
 import androidx.room.Room
@@ -11,8 +12,10 @@ import com.danielorozco14.basketballscoreboard.data.entities.Partido
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
-@Database(entities = [Partido::class],version = 1)
+@Database(entities = [Partido::class],version = 3)
 abstract class PartidosRoomDatabase : RoomDatabase() {
 
     abstract fun partidoDAO():PartidoDAO
@@ -51,11 +54,24 @@ abstract class PartidosRoomDatabase : RoomDatabase() {
         }
 
         suspend fun populateDatabase(partidoDAO: PartidoDAO){
+            var date: Date = Calendar.getInstance().time
+            Log.d("FECHA",date.toString())
+
+            var df: SimpleDateFormat = SimpleDateFormat("dd/MMM/yyyy")
+            var formattedDate= df.format(date)
+
+            var Df=SimpleDateFormat("HH:MM:SS")
+            var formattedTime:String=Df.format(date)
+
+
+
+
+            Log.d("FECHA","Fecha formateada "+formattedDate)
             partidoDAO.deletePartidos()
-            var partido=Partido("Miami Heat",56,"Boston Celtics",90)
+            var partido=Partido("Miami Heat",56,"Boston Celtics",90,formattedDate,formattedTime)
             partidoDAO.insertPartido(partido)
 
-            partido=Partido("Lakers",66,"Toronto Raptors",73)
+            partido=Partido("Lakers",66,"Toronto Raptors",73,formattedDate,formattedTime)
             partidoDAO.insertPartido(partido)
 
         }

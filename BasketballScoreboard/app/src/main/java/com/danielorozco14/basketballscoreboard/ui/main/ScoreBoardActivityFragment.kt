@@ -1,11 +1,8 @@
 package com.danielorozco14.basketballscoreboard.ui.main
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,31 +10,18 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.get
 
 import com.danielorozco14.basketballscoreboard.R
 import com.danielorozco14.basketballscoreboard.data.entities.Partido
 import com.danielorozco14.basketballscoreboard.ui.viewmodel.PartidoViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_score_board_activity.view.*
-import kotlinx.android.synthetic.main.partido_cardview.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [ScoreBoardActivityFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [ScoreBoardActivityFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class ScoreBoardActivityFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var partidoViewModel: PartidoViewModel
@@ -54,6 +38,13 @@ class ScoreBoardActivityFragment : Fragment() {
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         val root :View =inflater.inflate(R.layout.fragment_score_board_activity, container, false)
+
+        sumarDosLocal(root)
+        sumarDosVisita(root)
+        sumarTresLocal(root)
+        sumarTresVisita(root)
+        sumarUnoLocal(root)
+        sumarUnoVisita(root)
         guardarPartido(root)
 
         return root
@@ -61,12 +52,21 @@ class ScoreBoardActivityFragment : Fragment() {
 
 
     fun guardarPartido(container:View)=container.btn_guardar.setOnClickListener{
+
+        var date: Date = Calendar.getInstance().time
+        Log.d("FECHA",date.toString())
+
+        var df: SimpleDateFormat = SimpleDateFormat("dd/MMM/yyyy")
+        var formattedDate= df.format(date)
+
+        var Df=SimpleDateFormat("HH:mm:ss")
+        var formattedTime:String=Df.format(date)
         partidoViewModel=ViewModelProviders.of(this).get(PartidoViewModel::class.java)
 
-        val score_Local:TextView= container.findViewById(R.id.score_local) as TextView
-        val name_Local:EditText= container.findViewById(R.id.equipo_local_name) as EditText
-        val score_Visita:TextView= container.findViewById(R.id.score_visitante) as TextView
-        val name_Visita:EditText= container.findViewById(R.id.equipo_visita_name) as EditText
+        var score_Local:TextView= container.findViewById(R.id.score_local) as TextView
+        var name_Local:EditText= container.findViewById(R.id.equipo_local_name) as EditText
+        var score_Visita:TextView= container.findViewById(R.id.score_visitante) as TextView
+        var name_Visita:EditText= container.findViewById(R.id.equipo_visita_name) as EditText
 
         var Score_local:Int = Integer.parseInt(score_Local.text.toString())
         var Name_local : String = name_Local.text.toString()
@@ -74,13 +74,17 @@ class ScoreBoardActivityFragment : Fragment() {
         var Score_visita:Int= Integer.parseInt(score_Visita.text.toString())
         var Name_visita: String = name_Visita.text.toString()
 
-        if(Name_local!="" && Name_visita!=""){
-            val partido= Partido(Name_local,Score_local,Name_visita,Score_visita)
+        if(Name_local!="" && Name_visita!="" && (Score_local>0 || Score_visita>0)){
+            val partido= Partido(Name_local,Score_local,Name_visita,Score_visita,formattedDate,formattedTime)
 
             partidoViewModel.insertPartidoViewModel(partido)
-
+            score_Local.text="0"
+            name_Local.setText("")
+            name_Visita.setText("")
+            score_Visita.text="0"
             Snackbar.make(container, "Partido Guardado", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+
         }else{
             Snackbar.make(container, "No se puede guardar un partido vacío", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -109,23 +113,36 @@ class ScoreBoardActivityFragment : Fragment() {
         //listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     *
-     *  interface OnFragmentInteractionListener {
-    // TODO: Update argument type and name
-    fun onFragmentInteraction(uri: Uri)
+    fun sumarTresLocal(container: View)=container.btn_3_local.setOnClickListener{
+        var score_Local:TextView= container.findViewById(R.id.score_local) as TextView
+        var Score_local:Int =Integer.parseInt(score_Local.text.toString())
+        score_Local.text= (Score_local+3).toString()
     }
-     */
-
+    fun sumarTresVisita(container: View)=container.btn_3_visitante.setOnClickListener{
+        var score_Visita:TextView= container.findViewById(R.id.score_visitante) as TextView
+        var Score_visita:Int =Integer.parseInt(score_Visita.text.toString())
+        score_Visita.text= (Score_visita+3).toString()
+    }
+    fun sumarDosLocal(container: View)=container.btn_2_local.setOnClickListener{
+        var score_Local:TextView= container.findViewById(R.id.score_local) as TextView
+        var Score_local:Int =Integer.parseInt(score_Local.text.toString())
+        score_Local.text= (Score_local+2).toString()
+    }
+    fun sumarDosVisita(container: View)=container.btn_2_visitante.setOnClickListener{
+        var score_Visita:TextView= container.findViewById(R.id.score_visitante) as TextView
+        var Score_visita:Int =Integer.parseInt(score_Visita.text.toString())
+        score_Visita.text= (Score_visita+2).toString()
+    }
+    fun sumarUnoLocal(container: View)=container.btn_1_local.setOnClickListener{
+        var score_Local:TextView= container.findViewById(R.id.score_local) as TextView
+        var Score_local:Int =Integer.parseInt(score_Local.text.toString())
+        score_Local.text= (Score_local+1).toString()
+    }
+    fun sumarUnoVisita(container: View)=container.btn_1_visitante.setOnClickListener{
+        var score_Visita:TextView= container.findViewById(R.id.score_visitante) as TextView
+        var Score_visita:Int =Integer.parseInt(score_Visita.text.toString())
+        score_Visita.text= (Score_visita+1).toString()
+    }
 
     companion object {
         /**
